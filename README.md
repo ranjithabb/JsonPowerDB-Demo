@@ -13,4 +13,4 @@ This repository also contains a JSON file which consists of execution of IML and
 
 Screenshots:
 
-![Image of index_page](https://github.com/ranjithabb/JsonPowerDB-Demo/screenshots/)
+![Image of index_page](https://github.com/ranjithabb/JsonPowerDB-Demo/screenshots/1.PNG)
