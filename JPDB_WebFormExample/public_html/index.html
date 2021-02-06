@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html lang="en">
+<head>
+<title>Student Form</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet"
+href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script
+src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script
+src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src=" http://login2explore.com/jpdb/resources/js/0.0.3/jpdb-commons.js "></script>
+</head>
+<body>
+<div class="container">
+    <h2 style="background-color: green;align-items: center;color: white;text-align: center">Student Registration form</h2>
+<form id="stdForm" method="post">
+<div class="form-group">
+<span><label for="stdId">Student ID:</label> <label id="stdIdMsg">
+</label></span>
+<input type="text" class="form-control" name="stdId" id="stdId"
+placeholder="Enter Student ID (example:1,2,..)" required>
+</div>
+<div class="form-group">
+<label for="stdName">Student Name:</label>
+<input type="text" class="form-control" id="stdName"
+placeholder="Enter Student Name" name="stdName">
+</div>
+<div class="form-group">
+<label for="stdEmail">Email:</label>
+<input type="email" class="form-control" id="stdEmail"
+placeholder="Enter Student Email" name="stdEmail">
+</div>
+    <div align="center">
+    <input type="button" class="btn btn-primary" id="stdSave" value="Save"
+onclick="saveStudent();" >
+    <input type="button" class="btn btn-primary" id="stdRetrieve" value="Retrieve" onclick="retrieveData();"/>
+    <input type="button" class="btn btn-primary" id="stdRemove" value="Delete"
+onclick="removeStudent();" >
+    <input type="button" class="btn btn-primary" id="stdUpdate" value="Update"
+onclick="updateStudent();" >
+</div>
+    <div> <p id="show"></p></div>
+</form>
+</div>
+    <script>
+        function saveStudent(){
+        var jsonStr = validateAndGetFormData();
+         
+        if (jsonStr === "") {
+return;
+}
+var putReqStr = createPUTRequest("90937110|-31948800788624776|90931560",jsonStr, "Student", "PGStudents");
+alert(putReqStr);
+jQuery.ajaxSetup({async: false});
+var resultObj = executeCommandAtGivenBaseUrl(putReqStr, "http://api.login2explore.com:5577", "/api/iml");
+alert(JSON.stringify(resultObj));
+jQuery.ajaxSetup({async: true});
+resetForm();
+}
+function retrieveData(){
+     var jsonStr = validateAndGetFormData1();
+         
+        if (jsonStr === "") {
+return;
+}
+var token = "90937110|-31948800788624776|90931560";
+            var dbname = "Student";
+            var relationName = "PGStudents";
+            var sid = document.getElementById("stdId").value;
+            var jsonStr = {
+                stdId : sid
+            };
+ var reqString = createGETRequest(token, dbname, relationName, JSON.stringify(jsonStr));
+            alert(reqString);
+            jQuery.ajaxSetup({async: false});
+            var resultObj = executeCommand(reqString,
+                    "http://api.login2explore.com:5577", "/api/irl");
+            jQuery.ajaxSetup({async: true});
+            var data = JSON.stringify(resultObj);
+            var res = data.split("\"");
+            if(res[7].replace("\\","") === "DATA NOT FOUND"){
+                var mainContainer = document.getElementById("show");
+            mainContainer.innerHTML = res[7].replace("\\",""); 
+            }else{
+            var mainContainer = document.getElementById("show");
+            mainContainer.innerHTML = "Name : " + res[14].replace("\\","") + "      Email : " + res[10].replace("\\",""); }
+        resetForm();
+}
+        function removeStudent(){
+            var jsonStr = validateAndGetFormData1();
+         
+        if (jsonStr === "") {
+return;
+}
+            var token = "90937110|-31948800788624776|90931560";
+            var dbname = "Student";
+            var relationName = "PGStudents";
+            var sid = parseInt(document.getElementById("stdId").value);
+
+            var reqString = createREMOVERecordRequest(token, dbname, relationName, sid);
+            alert(reqString);
+            jQuery.ajaxSetup({async: false});
+            var resultObj = executeCommand(reqString,"http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({async: true});
+            //alert("Record Deleted");
+            alert(JSON.stringify(resultObj));
+            resetForm();
+            
+        }
+        function updateStudent(){
+            //alert("only email can be updated");
+            var jsonStr = validateAndGetFormData();
+         
+        if (jsonStr === "") {
+return;
+}
+
+            var token = "90937110|-31948800788624776|90931560";
+            var dbname = "Student";
+            var relationName = "PGStudents";
+            var sid = parseInt(document.getElementById("stdId").value);
+            var sname = document.getElementById("stdName").value;
+            var smail = document.getElementById("stdEmail").value;
+            
+            var jsonObj = {
+                stdName: sname,
+                stdEmail : smail
+            };
+            var reqString = createUPDATERecordRequest(token, JSON.stringify(jsonObj), dbname, relationName, sid);
+            alert(reqString);
+            jQuery.ajaxSetup({async: false});
+            var resultObj = executeCommand(reqString,
+                    "http://api.login2explore.com:5577", "/api/iml");
+            jQuery.ajaxSetup({async: true});
+            alert("update successfull");
+            resetForm();
+        }
+$("#stdId").focus();
+function validateAndGetFormData() {
+var stdIdVar = $("#stdId").val();
+if (stdIdVar === "") {
+alert("Student ID Required Value");
+$("#stdId").focus();
+return "";
+}
+var stdNameVar = $("#stdName").val();
+if (stdNameVar === "") {
+alert("Student Name is Required Value");
+$("#stdName").focus();
+return "";
+}
+var stdEmailVar = $("#stdEmail").val();
+if (stdEmailVar === "") {
+alert("Stduent Email is Required Value");
+$("#stdEmail").focus();
+return "";
+}
+var jsonStrObj = {
+stdId: stdIdVar,
+stdName: stdNameVar,
+stdEmail: stdEmailVar
+};
+return JSON.stringify(jsonStrObj);
+}
+function validateAndGetFormData1() {
+var stdIdVar = $("#stdId").val();
+if (stdIdVar === "") {
+alert("Student ID Required Value");
+$("#stdId").focus();
+return "";
+}
+var jsonStrObj = {
+stdId: stdIdVar
+};
+return JSON.stringify(jsonStrObj);
+}
+function validateAndGetFormData2() {
+var stdIdVar = $("#stdId").val();
+if (stdIdVar === "") {
+alert("Student ID Required Value");
+$("#stdId").focus();
+return "";
+}
+var stdEmailVar = $("#stdEmail").val();
+if (stdEmailVar === "") {
+alert("Stduent Email is Required Value");
+$("#stdEmail").focus();
+return "";
+}
+var jsonStrObj = {
+stdId: stdIdVar,
+stdEmail: stdEmailVar
+};
+return JSON.stringify(jsonStrObj);
+}
+/*function createPUTRequest(connToken, jsonObj, dbName, relName) {
+var putRequest = "{\n"
++ "\"token\" : \""
++ connToken
++ "\","
++ "\"dbName\": \""
++ dbName
++ "\",\n" + "\"cmd\" : \"PUT\",\n"
++ "\"rel\" : \""
++ relName + "\","
++ "\"jsonStr\": \n"
++ jsonObj
++ "\n"
++ "}";
+return putRequest;
+}
+function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+var url = dbBaseUrl + apiEndPointUrl;
+var jsonObj;
+$.post(url, reqString, function (result) {
+jsonObj = JSON.parse(result);
+}).fail(function (result) {
+var dataJsonObj = result.responseText;
+jsonObj = JSON.parse(dataJsonObj);
+});
+return jsonObj;
+}*/
+    function executeCommand(reqString, dbBaseUrl, apiEndPointUrl) {
+            var url = dbBaseUrl + apiEndPointUrl;
+            var jsonObj;
+            $.post(url, reqString, function (result) {
+                jsonObj = JSON.parse(result);
+            }).fail(function (result) {
+                var dataJsonObj = result.responseText;
+                jsonObj = JSON.parse(dataJsonObj);
+            });
+            return jsonObj;
+        }
+function resetForm() {
+$("#stdId").val("");
+$("#stdName").val("");
+$("#stdEmail").val("");
+$("#stdId").focus();
+}
+    </script>
+  
+</body>
+</html>
