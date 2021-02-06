@@ -13,6 +13,6 @@ This repository also contains a JSON file which consists of execution of IML and
 
 Screenshots:
 
-![Image of index_page](https://github.com/ranjithabb/JsonPowerDB-Demo/tree/main/screenshots/1.PNG)
+![Image of index_page](https://github.com/ranjithabb/JsonPowerDB-Demo/tree/main/screenshots/index.PNG)
 
 ![Image of relation in JPDB](https://github.com/ranjithabb/JsonPowerDB-Demo/tree/main/screenshots/2.PNG)
