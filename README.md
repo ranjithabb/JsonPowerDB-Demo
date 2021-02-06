@@ -1,6 +1,6 @@
-# JsonPowerDB Demo of records insertion
+# JsonPowerDB Demo
 
-## "This project is about basics of JsonPowerDB (JPDB) and how to use JPDB to insert records." ##
+## "This project is about basics of JsonPowerDB (JPDB) and how to use JPDB to perform CRUD operation" ##
 
 Benefits of using JsonPowerDB
 1. Simplest way to retrieve data in a JSON format.
